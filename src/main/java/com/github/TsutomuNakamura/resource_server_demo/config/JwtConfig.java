@@ -7,6 +7,7 @@ import com.nimbusds.jwt.SignedJWT;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.jwt.*;
 
 import java.io.InputStream;
@@ -15,8 +16,8 @@ import java.security.interfaces.ECPublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.text.ParseException;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Base64;
-import java.util.Collections;
 
 @Configuration
 public class JwtConfig {
@@ -70,13 +71,18 @@ public class JwtConfig {
                 
                 // Verify the signature
                 if (!signedJWT.verify(verifier)) {
-                    throw new JwtValidationException("Invalid JWT signature", Collections.emptyList());
+                    OAuth2Error error = new OAuth2Error("invalid_token", "Invalid JWT signature", null);
+                    throw new JwtValidationException("Invalid JWT signature", Arrays.asList(error));
                 }
                 
                 // Check expiration
                 Instant expiry = signedJWT.getJWTClaimsSet().getExpirationTime().toInstant();
                 if (Instant.now().isAfter(expiry)) {
-                    throw new JwtValidationException("JWT token has expired", Collections.emptyList());
+                    OAuth2Error error = new OAuth2Error("invalid_token", "JWT token has expired", null);
+                    throw new JwtValidationException(
+                        "JWT token has expired",
+                        Arrays.asList(error)
+                    );
                 }
                 
                 // Convert to Spring Security JWT

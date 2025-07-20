@@ -58,7 +58,7 @@ public class ResourceController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/hello")
+    @GetMapping("/protected/hello")
     public ResponseEntity<Map<String, String>> hello(@AuthenticationPrincipal Jwt jwt) {
         Map<String, String> response = new HashMap<>();
         response.put("message", "Hello World");
