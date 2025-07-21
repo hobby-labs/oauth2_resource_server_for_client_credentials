@@ -14,10 +14,10 @@ public class JwtConfig {
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withJwkSetUri(jwkSetUri)
+        return NimbusJwtDecoder.withJwkSetUri(jwkSetUri)
                 .jwsAlgorithm(org.springframework.security.oauth2.jose.jws.SignatureAlgorithm.ES256)
+                // Note: JWK Set caching is enabled by default with 5-minute cache duration
+                // The cache refreshes automatically when keys expire or change
                 .build();
-        
-        return jwtDecoder;
     }
 }

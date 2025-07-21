@@ -21,3 +21,11 @@ $ JWT_TOKEN=$(jq -r '.access_token' /tmp/token.json); echo $JWT_TOKEN
 $ curl -H "Authorization: Bearer ${JWT_TOKEN}" http://localhost:9001/api/protected/resource | jq
 ```
 
+## JWK endpoint
+Resource servers will introspect JWT tokens using the JWK endpoint of the authorization server.
+
+```
+$ curl http://localhost:9000/oauth2/jwks
+```
+
+
